@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -36,13 +37,20 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_title()
     {
-        $this->post('/projects', [])->assertSessionHasErrors('title');
+        // create-> build up the attributes and save to the db  
+        // make-> will just build the attributes but wont save to db --- returns an object not an array
+        // raw-> will build up the attributes but will store it as an array not and object
+        $attributes = Project::factory()->raw(['title' => '']);
+
+        $this->post('/projects', $attributes)->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_project_requires_a_description()
     {
-        $this->post('/projects', [])->assertSessionHasErrors('description');
+        $attributes = Project::factory()->raw(['description' => '']);
+
+        $this->post('/projects', $attributes)->assertSessionHasErrors('description');
     }
 
 }
