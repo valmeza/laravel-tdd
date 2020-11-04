@@ -56,7 +56,7 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_an_owner()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
         // $attributes = Project::factory()->raw(['owner_id' => null]);
         $attributes = Project::factory()->raw();
@@ -80,5 +80,5 @@ class ProjectsTest extends TestCase
             ->assertSee($project->description);
 
     }
-    
+
 }
