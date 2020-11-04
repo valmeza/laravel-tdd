@@ -32,12 +32,10 @@ class ProjectsController extends Controller
         // change the owner 
         // so we are no longer doing authentication in the validation level
         // instead we are doing it in the middleware level
-        $attributes['owner_id'] = auth()->id();
-
-        // dd($attributes);
+        // $attributes['owner_id'] = auth()->id();
 
         // persist
-        Project::create($attributes);
+        auth()->user()->projects()->create($attributes);
 
         // redirect
         return redirect(route('projects'));
