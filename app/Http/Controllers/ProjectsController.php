@@ -24,11 +24,20 @@ class ProjectsController extends Controller
         // validate
         $attributes = request()->validate([
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            // 'owner_id' => 'required'
             ]);
 
+        // do this to prevent people from interfering with request data and possibly 
+        // change the owner 
+        // so we are no longer doing authentication in the validation level
+        // instead we are doing it in the middleware level
+        $attributes['owner_id'] = auth()->id();
+
+        // dd($attributes);
+
         // persist
-        Project::create($attributes );
+        Project::create($attributes);
 
         // redirect
         return redirect(route('projects'));

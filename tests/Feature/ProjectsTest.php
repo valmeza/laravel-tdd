@@ -52,6 +52,20 @@ class ProjectsTest extends TestCase
 
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
     }
+    
+    /** @test */
+    public function a_project_requires_an_owner()
+    {
+        $this->withoutExceptionHandling();
+
+        // $attributes = Project::factory()->raw(['owner_id' => null]);
+        $attributes = Project::factory()->raw();
+
+        // if you have a project but you are not signed in then
+        // you should be redirected to the login page
+
+        $this->post('/projects', $attributes)->assertRedirect('login');
+    }
 
     /** @test */
     public function a_user_can_view_a_project() 
@@ -66,5 +80,5 @@ class ProjectsTest extends TestCase
             ->assertSee($project->description);
 
     }
-
+    
 }
