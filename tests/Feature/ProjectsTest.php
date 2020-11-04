@@ -61,7 +61,7 @@ class ProjectsTest extends TestCase
         $project = Project::factory()->create();
 
         // assert that we can see a title and description
-        $this->get('/projects/' . $project->id)
+        $this->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
 

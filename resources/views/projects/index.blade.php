@@ -9,9 +9,16 @@
 <body>
     <h1>Birdboard</h1>
 
-    @foreach ($projects as $item)
-        <li>{{$item->title}}</li> 
-    @endforeach
+    @forelse ($projects as $item)
+        <li>
+            <a href="{{$item->path()}}">{{$item->title}}</a>
+        </li> 
+
+     @empty
+    
+         <li>No Projects Yet</li>
+
+    @endforelse
 
 </body>
 </html>

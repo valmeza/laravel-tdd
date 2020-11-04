@@ -14,11 +14,9 @@ class ProjectsController extends Controller
         return view('projects.index', $data);
     }
 
-    public function show()
+    public function show(Project $project)
     {
-        $data['project'] = Project::findOrFail(request('project'));
-
-        return view('projects.show', $data);
+        return view('projects.show', compact('project'));
     }
 
     public function store() 
