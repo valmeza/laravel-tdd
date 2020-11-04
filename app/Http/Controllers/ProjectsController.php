@@ -17,9 +17,9 @@ class ProjectsController extends Controller
     public function show(Project $project)
     {
         // prevent anyone who is not the owner of a project
-        // if(auth()->id() !== $project->owner_id) {
-        //     abort(403);
-        // }
+        if(auth()->user()->isNot($project->owner)) {
+            abort(403);
+        }
 
         return view('projects.show', compact('project'));
     }
@@ -43,6 +43,6 @@ class ProjectsController extends Controller
         auth()->user()->projects()->create($attributes);
 
         // redirect
-        return redirect(route('projects'));
+        return redirect(route('projects.index'));
     }
 }
