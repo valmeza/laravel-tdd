@@ -14,6 +14,13 @@ class ProjectsController extends Controller
         return view('projects.index', $data);
     }
 
+    public function show()
+    {
+        $data['project'] = Project::findOrFail(request('project'));
+
+        return view('projects.show', $data);
+    }
+
     public function store() 
     {
         // validate
@@ -23,7 +30,7 @@ class ProjectsController extends Controller
             ]);
 
         // persist
-        Project::create($attributes);
+        Project::create($attributes );
 
         // redirect
         return redirect(route('projects'));
