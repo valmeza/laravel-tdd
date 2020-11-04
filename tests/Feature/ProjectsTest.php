@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -13,8 +14,24 @@ class ProjectsTest extends TestCase
     use WithFaker, RefreshDatabase;
 
     /** @test */
+    public function only_authenticated_users_can_create_projects()
+    {
+        // $this->withoutExceptionHandling();
+
+        // $attributes = Project::factory()->raw(['owner_id' => null]);
+        $attributes = Project::factory()->raw();
+
+        // if you have a project but you are not signed in then
+        // you should be redirected to the login page
+
+        $this->post('/projects', $attributes)->assertRedirect('login');
+    }
+
+    /** @test */
     public function a_user_can_create_a_project() 
     {
+        $this->actingAs(User::factory()->create());
+        
         $this->withoutExceptionHandling(); // laravel by default handles the exception but for testing we want to know what the exception was
 
         $attributes = [
@@ -37,6 +54,8 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_title()
     {
+        $this->actingAs(User::factory()->create());
+
         // create-> build up the attributes and save to the db  
         // make-> will just build the attributes but wont save to db --- returns an object not an array
         // raw-> will build up the attributes but will store it as an array not and object
@@ -48,25 +67,13 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_description()
     {
+        $this->actingAs(User::factory()->create());
+
         $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
     }
     
-    /** @test */
-    public function a_project_requires_an_owner()
-    {
-        // $this->withoutExceptionHandling();
-
-        // $attributes = Project::factory()->raw(['owner_id' => null]);
-        $attributes = Project::factory()->raw();
-
-        // if you have a project but you are not signed in then
-        // you should be redirected to the login page
-
-        $this->post('/projects', $attributes)->assertRedirect('login');
-    }
-
     /** @test */
     public function a_user_can_view_a_project() 
     {
@@ -80,5 +87,4 @@ class ProjectsTest extends TestCase
             ->assertSee($project->description);
 
     }
-
 }
