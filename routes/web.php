@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProjectsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,20 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/projects', function() {
+Route::get('/projects', [ProjectsController::class, 'index']);
 
-    $data['projects'] = App\Models\Project::all();
-
-    return view('projects.index', $data);
-});
-
-Route::post('/projects', function() {
-
-    // validate
-
-    // persist
-    App\Models\Project::create(request(['title', 'description']));
-
-    // redirect
-
-});
+Route::post('/projects', [ProjectsController::class, 'store']);
