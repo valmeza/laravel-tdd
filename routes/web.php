@@ -17,6 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/projects', function() {
+
+    $data['projects'] = App\Models\Project::all();
+
+    return view('projects.index', $data);
+});
+
 Route::post('/projects', function() {
 
     // validate

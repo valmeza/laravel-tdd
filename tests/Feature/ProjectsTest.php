@@ -25,5 +25,10 @@ class ProjectsTest extends TestCase
         $this->post('/projects', $attributes);
 
         $this->assertDatabaseHas('projects', $attributes);
+
+
+        // if I make a simple get request -> then assert that we see this new project we created 
+        // in this case project title
+        $this->get('/projects')->assertSee($attributes['title']);
     }
 }
