@@ -14,7 +14,7 @@ class ProjectsTest extends TestCase
     use WithFaker, RefreshDatabase;
 
     /** @test */
-    public function only_authenticated_users_can_create_projects()
+    public function guest_may_not_create_projects()
     {
         // $this->withoutExceptionHandling();
 
@@ -25,6 +25,20 @@ class ProjectsTest extends TestCase
         // you should be redirected to the login page
 
         $this->post('/projects', $attributes)->assertRedirect('login');
+    }
+
+    /** @test */
+    public function guest_may_not_view_projects()
+    {
+        $this->get('/projects')->assertRedirect('login');
+    }
+
+    /** @test */
+    public function guest_may_not_view_a_single_project()
+    {
+        $project = Project::factory()->create();
+
+        $this->get($project->path())->assertRedirect('login');
     }
 
     /** @test */
@@ -75,11 +89,15 @@ class ProjectsTest extends TestCase
     }
     
     /** @test */
-    public function a_user_can_view_a_project() 
+    public function a_user_can_view_their_project() 
     {
+        //sign in a user that is created
+        $this->be(User::factory()->create());
+
         $this->withoutExceptionHandling();
 
-        $project = Project::factory()->create();
+        // be explicit of the id of the owner that is signed in
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
 
         // assert that we can see a title and description
         $this->get($project->path())
