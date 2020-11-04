@@ -22,7 +22,8 @@ class ProjectsTest extends TestCase
             'description' => $this->faker->paragraph,
         ];
 
-        $this->post('/projects', $attributes);
+        // after successful post, redirect to the correct view
+        $this->post('/projects', $attributes)->assertRedirect('/projects');
 
         $this->assertDatabaseHas('projects', $attributes);
 
