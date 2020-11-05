@@ -7,7 +7,12 @@
 .button {
 
     @apply bg-blue-500;
-
+    @apply text-white;
+    @apply rounded-lg;
+    @apply py-2;
+    @apply text-sm;
+    @apply px-5;
+    box-shadow: 0 2px 7px 0 #b0eaff;
 }
 
 
