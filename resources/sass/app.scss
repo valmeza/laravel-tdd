@@ -4,6 +4,10 @@
 
 @tailwind utilities;
 
+.section {
+    @apply px-4;
+}
+
 .button {
 
     @apply bg-blue-500;
@@ -15,6 +19,12 @@
     box-shadow: 0 2px 7px 0 #b0eaff;
 }
 
+.cardz {
+    @apply bg-white;
+    @apply rounded-lg; 
+    @apply p-5;
+    @apply shadow;
+}
 
 // Fonts
 // @import url('https://fonts.googleapis.com/css?family=Nunito');
