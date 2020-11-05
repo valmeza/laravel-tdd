@@ -4,6 +4,12 @@
 
 @tailwind utilities;
 
+.button {
+
+    @apply bg-blue-500;
+
+}
+
 
 // Fonts
 // @import url('https://fonts.googleapis.com/css?family=Nunito');
