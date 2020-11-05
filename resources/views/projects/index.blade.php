@@ -8,10 +8,10 @@
 
     <div class="flex">
         @forelse ($projects as $item)
-            <div class="bg-white mr-4 rounded shadow">
-                <h3>{{ $item->title }}</h3>
+            <div class="bg-white mr-4 rounded p-5 shadow w-1/3" style="height: 200px;">
+                <h3 class="font-normal text-xl py-4">{{ $item->title }}</h3>
 
-                <div>{{ $item->description }}</div>
+                <div class="text-gray-200">{{ Str::limit($item->description, 100) }}</div>
             </div>
         @empty
             <div>
