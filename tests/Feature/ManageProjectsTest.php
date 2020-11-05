@@ -60,7 +60,7 @@ class ManageProjectsTest extends TestCase
     {        
         $this->withoutExceptionHandling(); // laravel by default handles the exception but for testing we want to know what the exception was
 
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
 
@@ -84,7 +84,7 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_title()
     {
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
 
         // create-> build up the attributes and save to the db  
         // make-> will just build the attributes but wont save to db --- returns an object not an array
@@ -97,7 +97,7 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_project_requires_a_description()
     {
-        $this->actingAs(User::factory()->create());
+        $this->signIn();
 
         $attributes = Project::factory()->raw(['description' => '']);
 
@@ -108,7 +108,7 @@ class ManageProjectsTest extends TestCase
     public function a_user_can_view_their_project() 
     {
         //sign in a user that is created
-        $this->be(User::factory()->create());
+        $this->signIn();
 
         $this->withoutExceptionHandling();
 
@@ -125,7 +125,7 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function an_authenticated_user_may_not_view_the_projects_of_others()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
 
         // $this->withoutExceptionHandling();
 

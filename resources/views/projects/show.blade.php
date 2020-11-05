@@ -24,11 +24,9 @@
                 {{-- tasks --}}
                 <h2 class="text-gray-200 font-normal mb-3">Tasks</h2>
 
-                <div class="cardz mb-3">Lorem ipsum</div>
-                <div class="cardz mb-3">Lorem ipsum</div>
-                <div class="cardz mb-3">Lorem ipsum</div>
-                <div class="cardz">Lorem ipsum</div>
-
+                @foreach ($project->tasks as $task)
+                    <div class="cardz mb-3">{{ $task->body }}</div>
+                @endforeach
 
             </div>
 
