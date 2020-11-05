@@ -6,17 +6,18 @@
         <a href="{{route('projects.create')}}">Create New Project</a>
     </div>
 
-    <ul>
+    <div class="flex">
         @forelse ($projects as $item)
-            <li>
-                <a href="{{$item->path()}}">{{$item->title}}</a>
-            </li> 
+            <div class="bg-white mr-4 rounded shadow">
+                <h3>{{ $item->title }}</h3>
 
+                <div>{{ $item->description }}</div>
+            </div>
         @empty
-        
-            <li>No Projects Yet</li>
-
-        @endforelse
-    </ul>   
+            <div>
+                <h3>No Projects Yet.</h3>
+            </div>
+        @endforelse 
+    </div>
 
 @endsection
