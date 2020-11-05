@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Birdboard</title>
+@extends('layouts.app')
+
+@section('css')
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.css" integrity="sha512-6eqPOYQmUqGh2hFSAKha1dbQlMq1OaxityCVG80dkvGmmLdsAdrAUkgBKDV4fpAT/xOUdkB6uupudSbCwyoJPQ==" crossorigin="anonymous" />
 </head>
-<body>
+    
+@endsection
 
-    <form method="POST" action="{{route('projects.store')}}" class="container" style="padding-top: 40px;">
+@section('content')
+
+    <form method="POST" action="{{route('projects.store')}}">
         @csrf
 
         <h1 class="heading is-1">Create a Project</h1>
@@ -30,9 +30,10 @@
         </div>
         <div class="field">
             <div class="control">
-            <button type="submit" class="button is-link">Create Project</button>
+                <button type="submit" class="button is-link">Create Project</button>
+                <a href="{{route('projects.index')}}">Cancel</a>
             </div>
         </div>
     </form>
-</body>
-</html>
+    
+@endsection

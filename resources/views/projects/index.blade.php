@@ -1,24 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Birdboard</title>
-</head>
-<body>
-    <h1>Birdboard</h1>
+@extends('layouts.app')
 
-    @forelse ($projects as $item)
-        <li>
-            <a href="{{$item->path()}}">{{$item->title}}</a>
-        </li> 
-
-     @empty
+@section('content')
     
-         <li>No Projects Yet</li>
+    <div class="flex items-center">
+        <a href="{{route('projects.create')}}">Create New Project</a>
+    </div>
 
-    @endforelse
+    <ul>
+        @forelse ($projects as $item)
+            <li>
+                <a href="{{$item->path()}}">{{$item->title}}</a>
+            </li> 
 
-</body>
-</html>
+        @empty
+        
+            <li>No Projects Yet</li>
+
+        @endforelse
+    </ul>   
+
+@endsection
