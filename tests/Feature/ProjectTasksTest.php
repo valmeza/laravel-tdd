@@ -35,6 +35,22 @@ class ProjectTasksTest extends TestCase
     }
 
     /** @test */
+    public function only_the_owner_of_a_project_may_update_tasks()
+    {
+        $this->signIn();
+
+        $project = Project::factory()->create();
+
+        $task = $project->addTask('Nevada left us on read.');
+
+        $this->patch($task->path(), ['body' => 'Changed.'])
+            ->assertStatus(403);
+
+        // if we are forbidden to update a task that is not ours be sure not to save anything to the db
+        $this->assertDatabaseMissing('tasks', ['body' => 'Changed.']);
+    }
+
+    /** @test */
     public function a_project_can_have_tasks()
     {
         // $this->withOutExceptionHandling();
@@ -65,7 +81,7 @@ class ProjectTasksTest extends TestCase
 
         $task = $project->addTask('Gimme all the tasks!');
 
-        $this->patch($project->path() . '/tasks/' . $task->id, [
+        $this->patch($task->path(), [
 
             'body' => 'This is updated',
             'completed' => true

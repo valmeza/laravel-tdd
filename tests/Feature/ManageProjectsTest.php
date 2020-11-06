@@ -71,10 +71,11 @@ class ManageProjectsTest extends TestCase
         ];
 
         // after successful post, redirect to the correct view
-        $this->post('/projects', $attributes)->assertRedirect('/projects');
+        $response = $this->post('/projects', $attributes);
+
+        $response->assertRedirect(Project::where($attributes)->first()->path());
 
         $this->assertDatabaseHas('projects', $attributes);
-
 
         // if I make a simple get request -> then assert that we see this new project we created 
         // in this case project title
