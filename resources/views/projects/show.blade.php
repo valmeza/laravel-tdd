@@ -25,11 +25,22 @@
                 <h2 class="text-gray-200 font-normal mb-3">Tasks</h2>
 
                 @foreach ($project->tasks as $task)
-                    <div class="cardz mb-3">{{ $task->body }}</div>
+                 <div class="cardz mb-3">
+                    <form action="{{ route('task.update',['project' => $project->id, 'task' => $task->id]) }}" method="POST">
+                        @method('PATCH')
+                        @csrf
+
+                        <div class="flex">
+                            <input name="body" value="{{ $task->body }}" type="text" class="w-full {{$task->completed ? 'text-gray-200' : ''}}">
+
+                            <input name="completed" type="checkbox" onchange="this.form.submit()" {{$task->completed ? 'checked' : ''}}>
+                        </div>
+                    </form>
+                 </div>
                 @endforeach
                     
                 <div class="cardz mb-3">
-                    <form action="{{ $project->path() . '/tasks' }}" method="POST">
+                    <form action="{{ route('tasks.store', $project->id) }}" method="POST">
                         @csrf
                         <input name="body" placeholder="Add a task..." class="w-full">   
                     </form>

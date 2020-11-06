@@ -53,7 +53,31 @@ class ProjectTasksTest extends TestCase
         $this->get($project->path())
             ->assertSee('Joe Biden');
     }
+    
+    /** @test */
+    public function a_task_can_be_updated()
+    {
+        $this->withoutExceptionHandling();
 
+        $this->signIn();
+
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+
+        $task = $project->addTask('Gimme all the tasks!');
+
+        $this->patch($project->path() . '/tasks/' . $task->id, [
+
+            'body' => 'This is updated',
+            'completed' => true
+        ]);
+
+        // assert that in the db we have those exact fields
+        $this->assertDatabaseHas('tasks', [
+            
+            'body' => 'This is updated',
+            'completed' => true
+        ]);
+    }
 
     /** @test */
     public function a_task_requires_a_body()
@@ -66,4 +90,5 @@ class ProjectTasksTest extends TestCase
 
         $this->post($project->path() . '/tasks', $attributes)->assertSessionHasErrors('body');
     }
+    
 }
