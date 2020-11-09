@@ -55,15 +55,23 @@ class ProjectsController extends Controller
         return redirect(route('projects.show', $project->id));
     }
 
+    public function edit(Project $project) 
+    {
+        return view('projects.edit', compact('project'));
+    }
+
     public function update(Project $project) 
     {
         // using policies
         $this->authorize('update', $project);
 
-        $project->update([
-
-            'notes' => request('notes')
+        $attributes = request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'notes' => 'min:3'
         ]);
+
+        $project->update($attributes);
 
         return redirect(route('projects.show', $project->id));
     }

@@ -10,7 +10,7 @@
             <a href="{{ route('projects.index') }}">My Projects</a> / {{$project->title}}
         </p>
 
-        <a href="{{route('projects.create')}}" class="button" >New Project</a>
+        <a href="{{route('projects.edit', $project->id)}}" class="button" >Edit Project</a>
 
     </div>
 

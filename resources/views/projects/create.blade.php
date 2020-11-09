@@ -1,11 +1,5 @@
 @extends('layouts.app')
 
-@section('css')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.css" integrity="sha512-6eqPOYQmUqGh2hFSAKha1dbQlMq1OaxityCVG80dkvGmmLdsAdrAUkgBKDV4fpAT/xOUdkB6uupudSbCwyoJPQ==" crossorigin="anonymous" />
-</head>
-    
-@endsection
 
 @section('content')
 
@@ -36,4 +30,4 @@
         </div>
     </form>
     
-@endsection
+@endsection    
