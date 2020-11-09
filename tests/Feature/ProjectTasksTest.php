@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Task;
-use Tests\Setup\ProjectFactory;
+use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -40,11 +40,9 @@ class ProjectTasksTest extends TestCase
     {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
-        $task = $project->addTask('Nevada left us on read.');
-
-        $this->patch($task->path(), ['body' => 'Changed.'])
+        $this->patch($project->tasks()->first()->path(), ['body' => 'Changed.'])
             ->assertStatus(403);
 
         // if we are forbidden to update a task that is not ours be sure not to save anything to the db
@@ -54,16 +52,13 @@ class ProjectTasksTest extends TestCase
     /** @test */
     public function a_project_can_have_tasks()
     {
-        // $this->withOutExceptionHandling();
-
-        $this->signIn();
-
         //create but make sure project belongs to an authenticated user
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+        $project = ProjectFactory::create();
 
         // if you make a post request to the given end point it will
         // add a task to the given project
-        $this->post($project->path(). '/tasks', ['body' => 'Joe Biden']);
+        $this->actingAs($project->owner)
+            ->post($project->path(). '/tasks', ['body' => 'Joe Biden']);
 
         // now if we try to view that project
         // we should see the tasks
@@ -74,18 +69,13 @@ class ProjectTasksTest extends TestCase
     /** @test */
     public function a_task_can_be_updated()
     {
-        $this->withoutExceptionHandling();
 
-        $project = app(ProjectFactory::class)->ownedBy($this->signIn())->withTasks(1)->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
-        // $project = Project::factory()->create(['owner_id' => auth()->id()]);
-
-        // $task = $project->addTask('Gimme all the tasks!');
-
-        $this->patch($project->tasks()->first()->path(), [
-
-            'body' => 'This is updated',
-            'completed' => true
+        $this->actingAs($project->owner)
+            ->patch($project->tasks()->first()->path(), [
+                'body' => 'This is updated',
+                'completed' => true
         ]);
 
         // assert that in the db we have those exact fields
@@ -99,13 +89,13 @@ class ProjectTasksTest extends TestCase
     /** @test */
     public function a_task_requires_a_body()
     {
-        $this->signIn();
-
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+        $project = ProjectFactory::create();
 
         $attributes = Task::factory()->raw(['body' => '']);
 
-        $this->post($project->path() . '/tasks', $attributes)->assertSessionHasErrors('body');
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', $attributes)
+            ->assertSessionHasErrors('body');
     }
     
 }

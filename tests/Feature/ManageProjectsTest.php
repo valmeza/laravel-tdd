@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Facades\Tests\Setup\ProjectFactory;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,8 +14,6 @@ class ManageProjectsTest extends TestCase
 
     use WithFaker, RefreshDatabase;
 
-
-    // another way to test the test below
     /** @test */
     public function guest_may_not_manage_projects()
     {
@@ -25,35 +24,6 @@ class ManageProjectsTest extends TestCase
         $this->get($project->path())->assertRedirect('login');
         $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
-
-
-    // /** @test */
-    // public function guest_may_not_create_projects()
-    // {
-    //     // $this->withoutExceptionHandling();
-
-    //     // $attributes = Project::factory()->raw(['owner_id' => null]);
-    //     $attributes = Project::factory()->raw();
-
-    //     // if you have a project but you are not signed in then
-    //     // you should be redirected to the login page
-
-    //     $this->post('/projects', $attributes)->assertRedirect('login');
-    // }
-
-    // /** @test */
-    // public function guest_may_not_view_projects()
-    // {
-    //     $this->get('/projects')->assertRedirect('login');
-    // }
-
-    // /** @test */
-    // public function guest_may_not_view_a_single_project()
-    // {
-    //     $project = Project::factory()->create();
-
-    //     $this->get($project->path())->assertRedirect('login');
-    // }
 
     /** @test */
     public function a_user_can_create_a_project() 
@@ -93,34 +63,22 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_user_can_update_a_project()
     {
-        $this->signIn();
+        $project = ProjectFactory::create();
 
-        $this->withoutExceptionHandling();
+        $this->actingAs($project->owner)->patch($project->path(), $attributes = ['notes' => 'Changed'])
+            ->assertRedirect($project->path());
 
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
-
-        $this->patch($project->path(), [
-
-            'notes' => 'Changed'
-
-        ])->assertRedirect($project->path());
-
-        $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
+        $this->assertDatabaseHas('projects', $attributes);
     }
     
     /** @test */
     public function a_user_can_view_their_project() 
     {
-        //sign in a user that is created
-        $this->signIn();
-
-        $this->withoutExceptionHandling();
-
-        // be explicit of the id of the owner that is signed in
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+        $project = ProjectFactory::create();
 
         // assert that we can see a title and description
-        $this->get($project->path())
+        $this->actingAs($project->owner)
+            ->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
 
@@ -167,11 +125,9 @@ class ManageProjectsTest extends TestCase
     {
         $this->signIn();
 
-        // $this->withoutExceptionHandling();
-
         $project = Project::factory()->create();
 
         // if the project is does not belong to that user
-        $this->patch($project->path(), [])->assertStatus(403);
+        $this->patch($project->path())->assertStatus(403);
     }
 }
