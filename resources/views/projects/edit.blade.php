@@ -3,32 +3,15 @@
 
 @section('content')
 
-<form method="POST" action="{{ route('projects.update', $project->id) }}">
-    @csrf
-    @method('PATCH')
-    
-    <h1 class="heading is-1">Edit Your Project</h1>
+<div class="lg:w-1/2 lg:mx-auto bg-white p-6 md:py-12 md:px-16 rounded shadow">
+    <h1 class="text-2xl font-normal mb-10 text-center">Edit Project</h1>
 
-    <div class="field">
-        <label class="label" for="title">Title</label>
+    <form method="POST" action="{{ $project->path() }}">
+        @method('PATCH')
 
-        <div class="control">
-            <input type="text" class="input" name="title" placeholder="Title" value="{{ $project->title }}">
-        </div>
-    </div>
-    <div class="field">
-        <label class="label" for="description">Description</label>
+        @include('projects._form' , ['buttonText' => 'Edit Project'])
 
-        <div class="control">
-            <textarea name="description" class="textarea" placeholder="Description">{{ $project->description }}</textarea>
-        </div>
-    </div>
-    <div class="field">
-        <div class="control">
-            <button type="submit" class="button is-link">Edit Project</button>
-            <a href="{{ $project->path() }}">Cancel</a>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 
 @endsection

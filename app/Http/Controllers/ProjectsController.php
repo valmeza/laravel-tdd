@@ -34,14 +34,6 @@ class ProjectsController extends Controller
 
     public function store() 
     {
-        // validate
-        $attributes = request()->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3'
-            // 'owner_id' => 'required'
-        ]);
-
         // do this to prevent people from interfering with request data and possibly 
         // change the owner 
         // so we are no longer doing authentication in the validation level
@@ -49,7 +41,7 @@ class ProjectsController extends Controller
         // $attributes['owner_id'] = auth()->id();
 
         // persist
-        $project = auth()->user()->projects()->create($attributes);
+        $project = auth()->user()->projects()->create($this->formValidation());
 
         // redirect
         return redirect(route('projects.show', $project->id));
@@ -65,14 +57,18 @@ class ProjectsController extends Controller
         // using policies
         $this->authorize('update', $project);
 
-        $attributes = request()->validate([
+        $project->update($this->formValidation());
+
+        return redirect(route('projects.show', $project->id));
+    }
+
+    protected function formValidation()
+    {
+        return request()->validate([
             'title' => 'required',
             'description' => 'required',
             'notes' => 'min:3'
+            // 'owner_id' => 'required'
         ]);
-
-        $project->update($attributes);
-
-        return redirect(route('projects.show', $project->id));
     }
 }
