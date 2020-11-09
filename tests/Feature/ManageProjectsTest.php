@@ -161,4 +161,17 @@ class ManageProjectsTest extends TestCase
         // if the project is does not belong to that user
         $this->get($project->path())->assertStatus(403);
     }
+
+    /** @test */
+    public function an_authenticated_user_may_not_update_the_projects_of_others()
+    {
+        $this->signIn();
+
+        // $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create();
+
+        // if the project is does not belong to that user
+        $this->patch($project->path(), [])->assertStatus(403);
+    }
 }

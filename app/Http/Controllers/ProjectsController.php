@@ -17,9 +17,12 @@ class ProjectsController extends Controller
     public function show(Project $project)
     {
         // prevent anyone who is not the owner of a project
-        if(auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        // if(auth()->user()->isNot($project->owner)) {
+        //     abort(403);
+        // }
+
+        // using policies does the same as above ^^^
+        $this->authorize('update', $project);
 
         return view('projects.show', compact('project'));
     }
@@ -54,9 +57,8 @@ class ProjectsController extends Controller
 
     public function update(Project $project) 
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        // using policies
+        $this->authorize('update', $project);
 
         $project->update([
 
