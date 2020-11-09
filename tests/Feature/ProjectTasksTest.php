@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Task;
+use Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -75,13 +76,13 @@ class ProjectTasksTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->signIn();
+        $project = app(ProjectFactory::class)->ownedBy($this->signIn())->withTasks(1)->create();
 
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+        // $project = Project::factory()->create(['owner_id' => auth()->id()]);
 
-        $task = $project->addTask('Gimme all the tasks!');
+        // $task = $project->addTask('Gimme all the tasks!');
 
-        $this->patch($task->path(), [
+        $this->patch($project->tasks()->first()->path(), [
 
             'body' => 'This is updated',
             'completed' => true
