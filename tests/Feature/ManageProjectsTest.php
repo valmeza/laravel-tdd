@@ -58,8 +58,9 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_user_can_create_a_project() 
     {        
-        $this->withoutExceptionHandling(); // laravel by default handles the exception but for testing we want to know what the exception was
-
+        // laravel by default handles the exception but for testing we want to know what the exception was
+        $this->withoutExceptionHandling(); 
+        
         $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
@@ -67,19 +68,62 @@ class ManageProjectsTest extends TestCase
         $attributes = [
 
             'title' => $this->faker->title,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->sentence,
+            'notes' => 'General notes'
         ];
 
         // after successful post, redirect to the correct view
         $response = $this->post('/projects', $attributes);
 
-        $response->assertRedirect(Project::where($attributes)->first()->path());
+        $project = Project::where($attributes)->first();
+
+        $response->assertRedirect($project->path());
 
         $this->assertDatabaseHas('projects', $attributes);
 
         // if I make a simple get request -> then assert that we see this new project we created 
         // in this case project title
-        $this->get('/projects')->assertSee($attributes['title']);
+
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    /** @test */
+    public function a_user_can_update_a_project()
+    {
+        $this->signIn();
+
+        $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+
+        $this->patch($project->path(), [
+
+            'notes' => 'Changed'
+
+        ])->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
+    }
+    
+    /** @test */
+    public function a_user_can_view_their_project() 
+    {
+        //sign in a user that is created
+        $this->signIn();
+
+        $this->withoutExceptionHandling();
+
+        // be explicit of the id of the owner that is signed in
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+
+        // assert that we can see a title and description
+        $this->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee($project->description);
+
     }
 
     /** @test */
@@ -103,24 +147,6 @@ class ManageProjectsTest extends TestCase
         $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
-    }
-    
-    /** @test */
-    public function a_user_can_view_their_project() 
-    {
-        //sign in a user that is created
-        $this->signIn();
-
-        $this->withoutExceptionHandling();
-
-        // be explicit of the id of the owner that is signed in
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
-
-        // assert that we can see a title and description
-        $this->get($project->path())
-            ->assertSee($project->title)
-            ->assertSee($project->description);
-
     }
 
     /** @test */

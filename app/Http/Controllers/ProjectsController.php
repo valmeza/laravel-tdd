@@ -35,8 +35,9 @@ class ProjectsController extends Controller
         $attributes = request()->validate([
             'title' => 'required',
             'description' => 'required',
+            'notes' => 'min:3'
             // 'owner_id' => 'required'
-            ]);
+        ]);
 
         // do this to prevent people from interfering with request data and possibly 
         // change the owner 
@@ -48,6 +49,20 @@ class ProjectsController extends Controller
         $project = auth()->user()->projects()->create($attributes);
 
         // redirect
+        return redirect(route('projects.show', $project->id));
+    }
+
+    public function update(Project $project) 
+    {
+        if (auth()->user()->isNot($project->owner)) {
+            abort(403);
+        }
+
+        $project->update([
+
+            'notes' => request('notes')
+        ]);
+
         return redirect(route('projects.show', $project->id));
     }
 }

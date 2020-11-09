@@ -47,6 +47,6 @@ class User extends Authenticatable
     {
         //by default eloquent will look for user_id in projects table
         // so if the foreign key name is different be sure to over write the name
-        return $this->hasMany(Project::class, 'owner_id');
+        return $this->hasMany(Project::class, 'owner_id')->latest('updated_at');
     }
 }
