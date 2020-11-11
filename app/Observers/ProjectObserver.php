@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Project;
-use App\Models\Activity;
 
 
 class ProjectObserver
@@ -16,10 +15,7 @@ class ProjectObserver
      */
     public function created(Project $project)
     {
-        Activity::create([
-            'project_id' => $project->id,
-            'description' => 'Created'
-        ]);
+        $project->recordActivity('created');
     }
 
     /**
@@ -30,42 +26,6 @@ class ProjectObserver
      */
     public function updated(Project $project)
     {
-        Activity::create([
-            'project_id' => $project->id,
-            'description' => 'updated'
-        ]);
-    }
-
-    /**
-     * Handle the Project "deleted" event.
-     *
-     * @param  \App\Models\Project  $project
-     * @return void
-     */
-    public function deleted(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Handle the Project "restored" event.
-     *
-     * @param  \App\Models\Project  $project
-     * @return void
-     */
-    public function restored(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Handle the Project "force deleted" event.
-     *
-     * @param  \App\Models\Project  $project
-     * @return void
-     */
-    public function forceDeleted(Project $project)
-    {
-        //
+        $project->recordActivity('updated');
     }
 }
