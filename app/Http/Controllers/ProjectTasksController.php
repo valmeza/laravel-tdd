@@ -36,17 +36,8 @@ class ProjectTasksController extends Controller
         if(request()->has('completed')) {
 
             $task->complete();
-            
+
         }
-
-        // $task->update([
-
-        //     'body' => request('body'),
-        //     // you could do request('completed') BUT this can cause issues if a request
-        //     // checkbox is not checked so ->has('completed') will take care of that
-        //     'completed' => request()->has('completed')
-
-        // ]);
 
         return redirect(route('projects.show', $project->id));
     }
