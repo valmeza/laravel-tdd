@@ -13,6 +13,12 @@ class Task extends Model
 
     protected $touches = ['project'];
 
+    // we want to make sure that even in the db if true or false is stored as 1 or 0
+    // we want to return a boolean
+    protected $casts = [
+        'completed' => 'boolean'
+    ];
+
     public function project()
     {
         return $this->belongsTo(Project::class);
@@ -34,11 +40,16 @@ class Task extends Model
         });
 
         static::updated(function ($task) {
-            
+
             if( ! $task->completed ) return;
 
             $task->project->recordActivity('completed_task');
-            
+
         });
     }
+
+    public function completed() {
+        $this->update(['completed' => true]);
+    }
+
 }
