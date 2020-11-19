@@ -20,12 +20,12 @@ class Project extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function tasks()
     {
         return $this->hasMany(Task::class);
     }
-    
+
     public function addTask($body)
     {
         return $this->tasks()->create(compact('body'));
@@ -36,12 +36,11 @@ class Project extends Model
         return $this->hasMany(Activity::class);
     }
 
-    public function recordActivity($type)
+    public function recordActivity($description)
     {
-        Activity::create([
-            'project_id' => $this->id,
-            'description' => $type
-        ]);
+
+        $this->activity()->create(['description' => $description]);
+
     }
 
 }

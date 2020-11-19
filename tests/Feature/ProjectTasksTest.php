@@ -20,9 +20,9 @@ class ProjectTasksTest extends TestCase
 
         $this->post($project->path() . '/tasks')->assertRedirect('login');
     }
-    
+
     /** @test */
-    public function only_the_owner_of_a_project_may_add_tasks() 
+    public function only_the_owner_of_a_project_may_add_tasks()
     {
         $this->signIn();
 
@@ -65,7 +65,7 @@ class ProjectTasksTest extends TestCase
         $this->get($project->path())
             ->assertSee('Joe Biden');
     }
-    
+
     /** @test */
     public function a_task_can_be_updated()
     {
@@ -74,15 +74,12 @@ class ProjectTasksTest extends TestCase
 
         $this->actingAs($project->owner)
             ->patch($project->tasks()->first()->path(), [
-                'body' => 'This is updated',
-                'completed' => true
+                'body' => 'This is updated'
         ]);
 
         // assert that in the db we have those exact fields
         $this->assertDatabaseHas('tasks', [
-            
-            'body' => 'This is updated',
-            'completed' => true
+            'body' => 'This is updated'
         ]);
     }
 
@@ -97,5 +94,5 @@ class ProjectTasksTest extends TestCase
             ->post($project->path() . '/tasks', $attributes)
             ->assertSessionHasErrors('body');
     }
-    
+
 }
