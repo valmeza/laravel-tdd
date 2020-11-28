@@ -38,12 +38,12 @@
                     </form>
                  </div>
                 @endforeach
-                    
+
                 <div class="cardz mb-3">
                     <form action="{{ route('tasks.store', $project->id) }}" method="POST">
                         @csrf
 
-                        <input name="body" placeholder="Add a task..." class="w-full">   
+                        <input name="body" placeholder="Add a task..." class="w-full">
 
                     </form>
                 </div>
@@ -59,10 +59,10 @@
                     @csrf
                     @method('patch')
 
-                    <textarea 
-                        name="notes" 
-                        class="cardz w-full mb-4" 
-                        style="min-height: 200px;" 
+                    <textarea
+                        name="notes"
+                        class="cardz w-full mb-4"
+                        style="min-height: 200px;"
                         placeholder="Add a note...">{{ $project->notes }}
                     </textarea>
 
@@ -86,6 +86,16 @@
             <div class="my-6">
 
                 @include('projects.card')
+
+                <div class="cardz mt-3">
+                    <ul class="text-xs list-reset">
+                        @foreach($project->activity as $activity)
+                            <li class="{{ $loop->last ? '' : 'mb-1' }}">
+                                @include("projects.activity.$activity->description")
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
 
             </div>
 
